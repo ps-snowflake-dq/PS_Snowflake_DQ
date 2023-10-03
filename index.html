@@ -1,0 +1,68 @@
+<html>
+
+<body>
+<title>Data Quality APP</title>
+<h2>Data Quality APP</h2>
+<p>Implementing Data Quality checks are essential part of designing Data Pipelines. Data Quality ensures dataset meets criteria for accuracy, completeness, validity, consistency, uniqueness, timeliness, and fitness for purpose, and it is critical to all data governance initiatives within an organization. This APP uses Python’s Great Expectation library for Data Quality Validation and Snowflake’s SnowPark API for data frames.
+Once APP gets onboarded into Snowflake account, Data Quality Checks can be implemented by calling stored procedures with relevant parameters.
+Below is the list of objects used in this framework.
+Installing APP on Snowflake account creates Tables, Sequences & Stored Procs required for this framework to function.
+</p>
+<br>
+<b>-- Sequence List -- </b>
+<br>
+<br>GE_FUNCTION_RULE_MAP_SEQ 
+<br>DQ_VIOLATIONS_SEQ
+<br>DQ_RULES_SEQ
+<br>PROCESS_METADATA_SEQ
+<br><br>
+<b>-- Table List  -- </b>
+<br>
+<br>DATASETS  
+<br>ATTRIBUTES 
+<br>DQ_RULES 
+<br>GE_FUNCTION_RULE_MAP 
+<br>DQ_VIOLATIONS 
+<br>SENSITIVE_ATTRIBUTES
+<br>PROCESS_METADATA 
+<br>
+<br>DATASETS - Stores Table level information.
+<br>Attributes  - Stores Column Level information.
+<br>DQ_RULES - Stores Data Quality Rules Information.
+<br>GE_FUNCTION_RULE_MAP  - Great Expectation Function & Data Quality Rule Mapping information.
+<br>DQ_VIOLATIONS - Stores Failed Records in Json Format
+<br>SENSITIVE_ATTRIBUTES - Stores Attributes to be identified as PI & PII information.
+<br>PROCESS_METADATA - Stores Process Metadata information
+<br><br>
+<b>--Stored Procs List-- </b>
+<br>
+<br>create_metadata(db VARCHAR, schema VARCHAR, tbl_name VARCHAR);
+<br>create_dq_rule(table_name varchar,column_name varchar,rule_id varchar,expression varchar);
+<br>create process_metadata(db varchar,schema varchar,tbl_name varchar);
+
+<br>create_metadata - > First Stored Proc called. This makes entries in Dataset and Attributes Tables.
+<br>create_dq_rule -> Call Stored Proc with Data Quality Rules. Please refer GE_FUNCTION_RULE_MAP for samples.
+<br><br><b>Example : </b>
+<br>
+<br>Call create_metadata(db_name,schema_name,table_name);
+<br>Call dq_rule(table_name,column_name,’expect columns to be null’,’NA’);
+<br>
+<br>
+<b>-- Populate Datasets and Attributes Table-- </b>
+<br><br>call create_metadata('DEMO_DB1','RAW_SCHEMA','EMPLOYEE_DEPT_TABLE');
+<br><br>
+<b>-- Populate DQRules Table-- </b>
+<br>
+<br>
+call create_dq_rule('EMPLOYEE_DEPT_TABLE','JOIN_DATE','column_values_match_strftime_date','%d-%m-%Y');
+<br>
+call create_dq_rule('EMPLOYEE_DEPT_TABLE','DEPT_ID','expect_column_values_to_be_increasing','NA');
+<br>
+call create_dq_rule('EMPLOYEE_DEPT_TABLE','DEPT','column_values_be_unique','NA');
+<br>
+call create_dq_rule('EMPLOYEE_DEPT_TABLE','NAME','column_values_be_unique','NA');
+<br>
+<br>
+<a href = "Walkthrough.docx" target = "_blank">Walkthrough</a>
+</body>
+</html>
